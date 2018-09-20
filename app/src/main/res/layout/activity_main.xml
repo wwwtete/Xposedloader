@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="15dp"
+    tools:context=".MainActivity">
+
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Hook目标包名:"
+          android:textColor="@color/colorPrimary"
+          android:textSize="14sp"/>
+
+      <TextView
+          android:id="@+id/tv_target"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="无"
+          android:layout_marginLeft="8dp"
+          android:textSize="16sp"
+          android:textColor="@color/colorAccent"/>
+
+  </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hook代码Apk:"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/tv_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="无"
+            android:layout_marginLeft="8dp"
+            android:textSize="16sp"
+            android:textColor="@color/colorAccent"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hook代码Class:"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp"/>
+
+        <EditText
+            android:id="@+id/ev_class"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="无"
+            android:layout_marginLeft="8dp"
+            android:textSize="16sp"
+            android:textColor="@color/colorAccent"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hook代码方法名:"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp"/>
+
+        <EditText
+            android:id="@+id/ev_method"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="无"
+            android:layout_marginLeft="8dp"
+            android:textSize="16sp"
+            android:textColor="@color/colorAccent"/>
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btn_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:text="Update Hook"/>
+
+
+</LinearLayout>
