@@ -66,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         findViewById(R.id.btn_update).setOnClickListener(this);
+        findViewById(R.id.btn_clear).setOnClickListener(this);
+        findViewById(R.id.tv_code).setOnClickListener(this);
+        findViewById(R.id.tv_target).setOnClickListener(this);
     }
 
 
@@ -73,10 +76,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_update:
-                SelectPackNameDialog.newInstance(0)
-                        .show(getSupportFragmentManager(),"select_apk_dialog");
+            case R.id.tv_target:
+                showSelectDialog(0);
+                break;
+            case R.id.btn_clear:
+                clear();
+                break;
+            case R.id.tv_code:
+                showSelectDialog(1);
                 break;
         }
+    }
+
+    private void showSelectDialog(int type) {
+        SelectPackNameDialog.newInstance(type)
+                .show(getSupportFragmentManager(),"select_apk_dialog");
+    }
+
+    private void clear() {
+        SP.edit()
+                .putString(StrConstants.KEY_TARGET_APK,"")
+                .putString(StrConstants.KEY_XPOSED_APK,"")
+                .putString(StrConstants.KEY_HOOK_CLASS,"")
+                .putString(StrConstants.KEY_HOOK_MEHTOD,"")
+                .apply();
+        update();
+
     }
 
     @Override

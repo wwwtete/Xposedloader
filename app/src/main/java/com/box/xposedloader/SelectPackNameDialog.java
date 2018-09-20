@@ -108,9 +108,9 @@ public class SelectPackNameDialog extends DialogFragment {
                 public void onClick(View view) {
                     if (mType == 1){
                         MainActivity.SP.edit()
-                                .putString(StrConstants.KEY_HOOK_CLASS,mData.packageName+StrConstants.DEFAULT_CLASS_NAME).apply();
-//                        MainActivity.SP.edit()
-//                                .putString(StrConstants.KEY_HOOK_MEHTOD,MainActivity.SP.getString(StrConstants.KEY_HOOK_CLASS,"")+StrConstants.DEFAULT_METHOD_NAME).apply();
+                                .putString(StrConstants.KEY_HOOK_CLASS,mData.packageName+StrConstants.DEFAULT_CLASS_NAME)
+                                .putString(StrConstants.KEY_HOOK_MEHTOD,StrConstants.DEFAULT_METHOD_NAME)
+                                .apply();
                         onSave(StrConstants.KEY_XPOSED_APK);
                     }else {
                         onSave(StrConstants.KEY_TARGET_APK);
