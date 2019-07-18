@@ -47,10 +47,11 @@ public class XposedLoader implements IXposedHookLoadPackage {
                 Context context=(Context) param.args[0];
                 lpparam.classLoader = context.getClassLoader();
                 mSp.reload();
+                L.d("Attach Hook Target => "+mSp.getString(StrConstants.KEY_TARGET_APK,""));
                 String xposedPlug = mSp.getString(StrConstants.KEY_XPOSED_APK,"");
                 String className = mSp.getString(StrConstants.KEY_HOOK_CLASS, StrConstants.DEFAULT_CLASS_NAME);
                 String method = mSp.getString(StrConstants.KEY_HOOK_MEHTOD, StrConstants.DEFAULT_METHOD_NAME);
-                L.d("apkName = "+xposedPlug+" , className = "+className+" , Method = "+method);
+                L.d("Xposed Plugin Name = "+xposedPlug+" , className = "+className+" , Method = "+method);
                 if (TextUtils.isEmpty(xposedPlug) || TextUtils.isEmpty(className) || TextUtils.isEmpty(method)) {
                     L.e("Xposed插件包名为空或Class名为空或Method为空");
                     return;
@@ -61,15 +62,23 @@ public class XposedLoader implements IXposedHookLoadPackage {
     }
 
     private void invokeHandleHookMethod(Context context, String xposedPlug, String className, String handleHookMethod, XC_LoadPackage.LoadPackageParam lpparam)  throws Throwable  {
+        L.d("[invokeHandleHookMethod] ==> "+lpparam.processName);
+//        Thread.sleep(3000);
         //原来的两种方式不是很好,改用这种新的方式
         File apkFile=findApkFile(context,xposedPlug);
+//        L.d("[1]");
         if (apkFile==null){
-            throw new RuntimeException("寻找模块apk失败");
+            L.e("Not Find Xposed Plugin APK File");
+            throw new RuntimeException("Not Find Xposed Plugin APK File");
         }
         //加载指定的hook逻辑处理类，并调用它的handleHook方法
         PathClassLoader pathClassLoader = new PathClassLoader(apkFile.getAbsolutePath(), ClassLoader.getSystemClassLoader());
-        Class<?> cls = Class.forName(className, true, pathClassLoader);
-        Object instance = cls.newInstance();
+//        L.d("[2]");
+        try {
+            Class<?> cls = Class.forName(className, true, pathClassLoader);
+//            L.d("[3]");
+            Object instance = cls.newInstance();
+//            L.d("[4]");
 //        for (Method method : cls.getMethods()) {
 //            L.e("[method] name = "+method.getName());
 //            for (Class<?> aClass : method.getParameterTypes()) {
@@ -77,8 +86,14 @@ public class XposedLoader implements IXposedHookLoadPackage {
 //            }
 //        }
 //        L.e("cls = "+cls+" [handleHookMethod] = "+ handleHookMethod);
-        Method method = cls.getDeclaredMethod(handleHookMethod, XC_LoadPackage.LoadPackageParam.class);
-        method.invoke(instance, lpparam);
+            Method method = cls.getDeclaredMethod(handleHookMethod, ClassLoader.class);
+//            L.d("[5]");
+            method.invoke(instance, lpparam.classLoader);
+            L.d("[invoke Method] ==>");
+        }catch (Exception e){
+            L.e(e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private File findApkFile(Context context, String xposedPlug) {
@@ -89,7 +104,7 @@ public class XposedLoader implements IXposedHookLoadPackage {
             Context moudleContext = context.createPackageContext(xposedPlug, Context.CONTEXT_INCLUDE_CODE | Context.CONTEXT_IGNORE_SECURITY);
             String apkPath=moudleContext.getPackageCodePath();
             return new File(apkPath);
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

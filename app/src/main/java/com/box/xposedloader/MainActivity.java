@@ -11,6 +11,20 @@ import android.widget.TextView;
 
 import static com.box.xposedloader.StrConstants.SP_NAME;
 
+/**
+ * XposedLoader使用步骤:
+ *
+ * 1.选择 Hook Package
+ * 2.选择 Xposed Plugin Package
+ * 3.新建Xposed插件项目
+ * 4.拷贝MainHook.java模板代码到项目根目录，
+ *   按照官方文档进行设置: https://github.com/rovo89/XposedBridge/wiki/Development-tutorial
+ * 5.修改App包下的build.gradle引入Xposed jar包
+ *   注意: 在使用XposedLoader加载方式时，引入方式必须是 implementation 否则运行时会出现ClassNotFind异常
+ * 6.正式发布时必须将jar包引入方式改为 provided 否则Xposed FrameWork无法加载
+ *
+ *
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
@@ -115,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTvTarget.setText(SP.getString(StrConstants.KEY_TARGET_APK,StrConstants.SELECTHOOKTARGET));
         mTvCode.setText(SP.getString(StrConstants.KEY_XPOSED_APK,StrConstants.SELECTXPOSEDPLUGIN));
         mEdClass.setText(SP.getString(StrConstants.KEY_HOOK_CLASS,StrConstants.DEFAULT_CLASS_NAME));
+        //onHandleLoadPackage(ClassLoader loader)
         mEdMethod.setText(SP.getString(StrConstants.KEY_HOOK_MEHTOD,StrConstants.DEFAULT_METHOD_NAME));
     }
 }
