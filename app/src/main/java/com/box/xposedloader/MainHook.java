@@ -13,16 +13,22 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
  */
 public class MainHook implements IXposedHookLoadPackage {
 
+    private static final String TAG = "MainHook";
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        if ("com.xmx.group".equals(lpparam.packageName)){
-            XposedHelpers.findAndHookMethod("com.xmx.group.MainActivityV1", lpparam.classLoader, "onResume",  new XC_MethodHook() {
-                @Override
-                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    L.d("onResume: ");
-                }
-            });
-        }
+        log("handleLoadPackage",lpparam.packageName);
+    }
+
+    public void e(String msg){
+        Log.e(TAG, msg );
+    }
+
+    public void log(String msg){
+        Log.d(TAG, msg);
+    }
+
+    public void log(String fun,String msg){
+        Log.d(TAG, "["+fun+"] ==> "+msg);
     }
 }
