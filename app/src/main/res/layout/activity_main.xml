@@ -9,6 +9,16 @@
     android:padding="15dp"
     tools:context=".MainActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="注意:不能Loasd Xposed中已启用的插件，否则会造成无法开机！！！！！！"
+        android:textSize="16sp"
+        android:textColor="#FF0000"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        android:paddingBottom="8dp"/>
+
   <!--<LinearLayout-->
       <!--android:layout_width="match_parent"-->
       <!--android:layout_height="wrap_content"-->
@@ -45,7 +55,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Xposed Plugin Package:"
+            android:text="Xposed Plugin Package(不能Load Xposed中已启用的插件，否则会造成无法开机):"
             android:textColor="@color/colorPrimary"
             android:textSize="12sp"/>
 
