@@ -14,4 +14,6 @@ public interface StrConstants {
 
     String DEFAULT_METHOD_NAME = "handleLoadPackage";
     String DEFAULT_CLASS_NAME = ".MainHook";
+    String SELECTHOOKTARGET ="Select Hook Target Package";
+    String SELECTXPOSEDPLUGIN = "Select Xposed Plugin Package";
 }

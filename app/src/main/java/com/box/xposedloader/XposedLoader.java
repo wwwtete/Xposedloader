@@ -48,8 +48,8 @@ public class XposedLoader implements IXposedHookLoadPackage {
                 lpparam.classLoader = context.getClassLoader();
                 mSp.reload();
                 String xposedPlug = mSp.getString(StrConstants.KEY_XPOSED_APK,"");
-                String className = mSp.getString(StrConstants.KEY_HOOK_CLASS, "");
-                String method = mSp.getString(StrConstants.KEY_HOOK_MEHTOD, "");
+                String className = mSp.getString(StrConstants.KEY_HOOK_CLASS, StrConstants.DEFAULT_CLASS_NAME);
+                String method = mSp.getString(StrConstants.KEY_HOOK_MEHTOD, StrConstants.DEFAULT_METHOD_NAME);
                 L.d("apkName = "+xposedPlug+" , className = "+className+" , Method = "+method);
                 if (TextUtils.isEmpty(xposedPlug) || TextUtils.isEmpty(className) || TextUtils.isEmpty(method)) {
                     L.e("Xposed插件包名为空或Class名为空或Method为空");

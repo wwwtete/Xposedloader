@@ -9,8 +9,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import static android.content.Context.MODE_PRIVATE;
-import static android.content.Context.MODE_WORLD_READABLE;
 import static com.box.xposedloader.StrConstants.SP_NAME;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -97,10 +95,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void clear() {
         SP.edit()
-                .putString(StrConstants.KEY_TARGET_APK,"")
-                .putString(StrConstants.KEY_XPOSED_APK,"")
-                .putString(StrConstants.KEY_HOOK_CLASS,"")
-                .putString(StrConstants.KEY_HOOK_MEHTOD,"")
+                .putString(StrConstants.KEY_TARGET_APK,null)
+                .putString(StrConstants.KEY_XPOSED_APK,null)
+                .putString(StrConstants.KEY_HOOK_CLASS,null)
+                .putString(StrConstants.KEY_HOOK_MEHTOD,null)
                 .apply();
         update();
 
@@ -114,9 +112,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void update() {
-        mTvTarget.setText(SP.getString(StrConstants.KEY_TARGET_APK,""));
-        mTvCode.setText(SP.getString(StrConstants.KEY_XPOSED_APK,""));
-        mEdClass.setText(SP.getString(StrConstants.KEY_HOOK_CLASS,""));
-        mEdMethod.setText(SP.getString(StrConstants.KEY_HOOK_MEHTOD,""));
+        mTvTarget.setText(SP.getString(StrConstants.KEY_TARGET_APK,StrConstants.SELECTHOOKTARGET));
+        mTvCode.setText(SP.getString(StrConstants.KEY_XPOSED_APK,StrConstants.SELECTXPOSEDPLUGIN));
+        mEdClass.setText(SP.getString(StrConstants.KEY_HOOK_CLASS,StrConstants.DEFAULT_CLASS_NAME));
+        mEdMethod.setText(SP.getString(StrConstants.KEY_HOOK_MEHTOD,StrConstants.DEFAULT_METHOD_NAME));
     }
 }

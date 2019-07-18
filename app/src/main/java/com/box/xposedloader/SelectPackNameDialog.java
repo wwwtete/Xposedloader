@@ -47,7 +47,7 @@ public class SelectPackNameDialog extends DialogFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mType = getArguments().getInt("type");
-        mTvTitle.setText(mType == 0 ? "选择要Hook的目标Apk" : "选择要Load的Xposed插件Apk");
+        mTvTitle.setText(mType == 0 ? StrConstants.SELECTHOOKTARGET : StrConstants.SELECTXPOSEDPLUGIN);
         getApps();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(new SelectPackNameAdapter());
@@ -57,16 +57,23 @@ public class SelectPackNameDialog extends DialogFragment {
     private void getApps() {
         PackageManager pm = getActivity().getPackageManager();
         mApps = new ArrayList<>();
+        Bundle metaData=null;
+        boolean isXposedPlugin = false;
         for (PackageInfo pk : pm.getInstalledPackages(0)) {
             if ((pk.applicationInfo.flags & 1) == 0){
-//                if (mType == 1){
-//                    Bundle metaData = pk.applicationInfo.metaData;
-//                    if (metaData != null && metaData.getBoolean("xposedmodule",false)) {
-//                        mApps.add(pk);
-//                    }
-//                }else {
+                try {
+                    metaData = pm.getApplicationInfo(pk.packageName,PackageManager.GET_META_DATA).metaData;
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+                isXposedPlugin = metaData != null && metaData.getBoolean("xposedmodule",false);
+                if (mType == 1){
+                    if (isXposedPlugin && !getActivity().getPackageName().equals(pk.packageName)) {
+                        mApps.add(pk);
+                    }
+                }else if (!isXposedPlugin){
                     mApps.add(pk);
-//                }
+                }
             }
         }
     }
@@ -98,11 +105,15 @@ public class SelectPackNameDialog extends DialogFragment {
     class PackNameVH extends RecyclerView.ViewHolder{
 
         public TextView mTvName;
+        public TextView mTvPackage;
+        public TextView mTvVersion;
         private PackageInfo mData;
 
         public PackNameVH(View itemView) {
             super(itemView);
             mTvName = itemView.findViewById(R.id.tv_name);
+            mTvPackage = itemView.findViewById(R.id.tv_packagename);
+            mTvVersion = itemView.findViewById(R.id.tv_version_name);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -131,7 +142,9 @@ public class SelectPackNameDialog extends DialogFragment {
 
         public void onBind(PackageInfo packageInfo) {
             mData = packageInfo;
-            mTvName.setText(mData.packageName);
+            mTvName.setText(SysUtils.getAppName(getActivity(),mData.packageName));
+            mTvVersion.setText("v "+ mData.versionName);
+            mTvPackage.setText(mData.packageName);
         }
     }
 
