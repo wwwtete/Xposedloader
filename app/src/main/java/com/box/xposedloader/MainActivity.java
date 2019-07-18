@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import static android.content.Context.MODE_PRIVATE;
+import static android.content.Context.MODE_WORLD_READABLE;
 import static com.box.xposedloader.StrConstants.SP_NAME;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -26,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SP = getSharedPreferences(SP_NAME,1);
+        SP = getSharedPreferences(SP_NAME,MODE_WORLD_READABLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

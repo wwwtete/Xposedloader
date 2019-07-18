@@ -25,6 +25,7 @@ public class XposedLoader implements IXposedHookLoadPackage {
     public XposedLoader() {
         mSp = new XSharedPreferences("com.box.xposedloader",StrConstants.SP_NAME);
         mSp.reload();
+        L.d("Hook Target = "+mSp.getString(StrConstants.KEY_TARGET_APK,"null"));
     }
 
     @Override
