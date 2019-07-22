@@ -12,7 +12,7 @@ public interface StrConstants {
     String KEY_HOOK_CLASS = "KEY_HOOK_CLASS";
     String KEY_HOOK_MEHTOD = "KEY_HOOK_MEHTOD";
 
-    String DEFAULT_METHOD_NAME = "onHandleLoadPackage";
+    String DEFAULT_METHOD_NAME = "handleLoadPackage";
     String DEFAULT_CLASS_NAME = ".MainHook";
     String SELECTHOOKTARGET ="Select Hook Target Package";
     String SELECTXPOSEDPLUGIN = "Select Xposed Plugin Package";

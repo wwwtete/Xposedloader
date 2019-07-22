@@ -22,10 +22,12 @@ public class XposedLoader implements IXposedHookLoadPackage {
 
     XSharedPreferences mSp;
 
+    private static final String VERSION = BuildConfig.VERSION_NAME;
+
     public XposedLoader() {
         mSp = new XSharedPreferences("com.box.xposedloader",StrConstants.SP_NAME);
         mSp.reload();
-        L.d("Hook Target = "+mSp.getString(StrConstants.KEY_TARGET_APK,"null"));
+        L.d("XposedLoader Version="+VERSION);
     }
 
     @Override
@@ -45,7 +47,7 @@ public class XposedLoader implements IXposedHookLoadPackage {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Context context=(Context) param.args[0];
-                lpparam.classLoader = context.getClassLoader();
+//                lpparam.classLoader = context.getClassLoader();
                 mSp.reload();
                 L.d("Attach Hook Target => "+mSp.getString(StrConstants.KEY_TARGET_APK,""));
                 String xposedPlug = mSp.getString(StrConstants.KEY_XPOSED_APK,"");
@@ -63,21 +65,24 @@ public class XposedLoader implements IXposedHookLoadPackage {
 
     private void invokeHandleHookMethod(Context context, String xposedPlug, String className, String handleHookMethod, XC_LoadPackage.LoadPackageParam lpparam)  throws Throwable  {
         L.d("[invokeHandleHookMethod] ==> "+lpparam.processName);
+        //为方便打断点调试增加延时，真正使用时应去掉这个延时
 //        Thread.sleep(3000);
-        //原来的两种方式不是很好,改用这种新的方式
+        //1.获取Xposed插件Apk文件
         File apkFile=findApkFile(context,xposedPlug);
-//        L.d("[1]");
+        L.d("[1]");
         if (apkFile==null){
             L.e("Not Find Xposed Plugin APK File");
             throw new RuntimeException("Not Find Xposed Plugin APK File");
         }
-        //加载指定的hook逻辑处理类，并调用它的handleHook方法
-        PathClassLoader pathClassLoader = new PathClassLoader(apkFile.getAbsolutePath(), ClassLoader.getSystemClassLoader());
-//        L.d("[2]");
+        //2.获取到Apk文件路径后初始化PathClassLoader对象
+        //注意:第二个参数ClassLoader一定要选择LoadPackageParam对象的Classloader不能使用系统的ClassLoader，否则会抛出找不到Xposed相关类的异常
+        PathClassLoader pathClassLoader = new PathClassLoader(apkFile.getAbsolutePath(), lpparam.getClass().getClassLoader());//ClassLoader.getSystemClassLoader());
+        L.d("[2]");
         try {
+            //3.加载Hook处理逻辑Class对象
             Class<?> cls = Class.forName(className, true, pathClassLoader);
-//            L.d("[3]");
-            Object instance = cls.newInstance();
+            L.d("[3]");
+//            Object instance = cls.newInstance();
 //            L.d("[4]");
 //        for (Method method : cls.getMethods()) {
 //            L.e("[method] name = "+method.getName());
@@ -86,10 +91,12 @@ public class XposedLoader implements IXposedHookLoadPackage {
 //            }
 //        }
 //        L.e("cls = "+cls+" [handleHookMethod] = "+ handleHookMethod);
-            Method method = cls.getDeclaredMethod(handleHookMethod, ClassLoader.class);
+//            Method method = cls.getDeclaredMethod(handleHookMethod, ClassLoader.class,ClassLoader.class);
 //            L.d("[5]");
-            method.invoke(instance, lpparam.classLoader);
-            L.d("[invoke Method] ==>");
+//            method.invoke(instance, lpparam);//lpparam.classLoader,context.getClassLoader());
+            //4.调用Hook处理入口方法
+            XposedHelpers.callMethod(cls.newInstance(),"handleLoadPackage",lpparam);
+            L.d("[invoke Method] <==");
         }catch (Exception e){
             L.e(e.getMessage());
             e.printStackTrace();

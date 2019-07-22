@@ -19,9 +19,6 @@ import static com.box.xposedloader.StrConstants.SP_NAME;
  * 3.新建Xposed插件项目
  * 4.拷贝MainHook.java模板代码到项目根目录，
  *   按照官方文档进行设置: https://github.com/rovo89/XposedBridge/wiki/Development-tutorial
- * 5.修改App包下的build.gradle引入Xposed jar包
- *   注意: 在使用XposedLoader加载方式时，引入方式必须是 implementation 否则运行时会出现ClassNotFind异常
- * 6.正式发布时必须将jar包引入方式改为 provided 否则Xposed FrameWork无法加载
  *
  *
  */
