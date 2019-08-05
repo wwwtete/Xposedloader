@@ -66,7 +66,8 @@ public class XposedLoader implements IXposedHookLoadPackage {
     private void invokeHandleHookMethod(Context context, String xposedPlug, String className, String handleHookMethod, XC_LoadPackage.LoadPackageParam lpparam)  throws Throwable  {
         L.d("[invokeHandleHookMethod] ==> "+lpparam.processName);
         //为方便打断点调试增加延时，真正使用时应去掉这个延时
-//        Thread.sleep(3000);
+        if (mSp.getBoolean(StrConstants.KEY_DEBUG_ISOPEN,false))
+            Thread.sleep(3000);
         //1.获取Xposed插件Apk文件
         File apkFile=findApkFile(context,xposedPlug);
         L.d("[1]");

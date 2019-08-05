@@ -3,9 +3,11 @@ package com.box.xposedloader;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView mTvCode;
     EditText mEdClass;
     EditText mEdMethod;
+    SwitchCompat mScDebug;
     XposedLoader mLoader;
     MainHook mMainHook;
 
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTvCode = findViewById(R.id.tv_code);
         mTvTarget = findViewById(R.id.tv_target);
         mEdClass = findViewById(R.id.ev_class);
+        mScDebug = findViewById(R.id.switch_debug);
         mEdClass.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -80,6 +84,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_clear).setOnClickListener(this);
         findViewById(R.id.tv_code).setOnClickListener(this);
         findViewById(R.id.tv_target).setOnClickListener(this);
+        mScDebug.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                MainActivity.SP.edit()
+                        .putBoolean(StrConstants.KEY_DEBUG_ISOPEN,isChecked)
+                        .apply();
+            }
+        });
     }
 
 
@@ -110,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .putString(StrConstants.KEY_XPOSED_APK,null)
                 .putString(StrConstants.KEY_HOOK_CLASS,null)
                 .putString(StrConstants.KEY_HOOK_MEHTOD,null)
+                .putBoolean(StrConstants.KEY_DEBUG_ISOPEN,false)
                 .apply();
         update();
 
@@ -128,5 +141,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mEdClass.setText(SP.getString(StrConstants.KEY_HOOK_CLASS,StrConstants.DEFAULT_CLASS_NAME));
         //onHandleLoadPackage(ClassLoader loader)
         mEdMethod.setText(SP.getString(StrConstants.KEY_HOOK_MEHTOD,StrConstants.DEFAULT_METHOD_NAME));
+        mScDebug.setChecked(SP.getBoolean(StrConstants.KEY_DEBUG_ISOPEN,false));
     }
 }
