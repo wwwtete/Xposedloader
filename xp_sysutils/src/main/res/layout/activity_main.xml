@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="30dp"
+    tools:context=".MainActivity">
+
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/switch_debug"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="Debugable:      "
+        android:textOff="关"
+        android:textOn="开"
+        app:showText="true"
+        />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/switch_backup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginTop="15dp"
+        android:text="Backup:      "
+        android:textOff="关"
+        android:textOn="开"
+        app:showText="true"
+        />
+
+
+
+</LinearLayout>
