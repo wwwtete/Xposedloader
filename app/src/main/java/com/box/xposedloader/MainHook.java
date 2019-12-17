@@ -21,7 +21,18 @@ public class MainHook implements IXposedHookLoadPackage {
     private static final String TAARGET_PACKAGENAME = "";
 
     /**
-     * Xposed FrameWork入口方法
+     * XposedLoader入口方法(使用XposedLoader动态加载时调用)
+     * @param lpparam
+     * @param param {@link Application#attach(Context)} 方法中的参数
+     * @throws Throwable
+     */
+    public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam, XC_MethodHook.MethodHookParam param) throws Throwable {
+        log("lpparam: "+lpparam.classLoader+" | param: "+param.thisObject.getClass().getClassLoader());
+    }
+
+
+    /**
+     * Xposed FrameWork入口方法（使用Xposed FrameWork框架时调用）
      * @param lpparam
      * @throws Throwable
      */

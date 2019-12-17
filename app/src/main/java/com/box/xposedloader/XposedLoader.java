@@ -34,6 +34,7 @@ public class XposedLoader implements IXposedHookLoadPackage {
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         mSp.reload();
         String target = mSp.getString(StrConstants.KEY_TARGET_APK,"");
+//        L.d("packageName: "+lpparam.packageName);
         if (TextUtils.isEmpty(target)) {
             L.e("Hook目标包名 is Null");
             return;
@@ -41,9 +42,10 @@ public class XposedLoader implements IXposedHookLoadPackage {
         if (!target.equals(lpparam.packageName)){
             return;
         }
-
+        L.d("start Hook ==> "+lpparam.packageName);
         //将loadPackageParam的classloader替换为宿主程序Application的classloader,解决宿主程序存在多个.dex文件时,有时候ClassNotFound的问题
         XposedHelpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
+
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Context context=(Context) param.args[0];
@@ -58,12 +60,12 @@ public class XposedLoader implements IXposedHookLoadPackage {
                     L.e("Xposed插件包名为空或Class名为空或Method为空");
                     return;
                 }
-                invokeHandleHookMethod(context,xposedPlug, className, method, lpparam);
+                invokeHandleHookMethod(context,xposedPlug, className, method, lpparam,param);
             }
         });
     }
 
-    private void invokeHandleHookMethod(Context context, String xposedPlug, String className, String handleHookMethod, XC_LoadPackage.LoadPackageParam lpparam)  throws Throwable  {
+    private void invokeHandleHookMethod(Context context, String xposedPlug, String className, String handleHookMethod, XC_LoadPackage.LoadPackageParam lpparam, XC_MethodHook.MethodHookParam param)  throws Throwable  {
         L.d("[invokeHandleHookMethod] ==> "+lpparam.processName);
         //为方便打断点调试增加延时，真正使用时应去掉这个延时
         if (mSp.getBoolean(StrConstants.KEY_DEBUG_ISOPEN,false))
@@ -96,10 +98,10 @@ public class XposedLoader implements IXposedHookLoadPackage {
 //            L.d("[5]");
 //            method.invoke(instance, lpparam);//lpparam.classLoader,context.getClassLoader());
             //4.调用Hook处理入口方法
-            XposedHelpers.callMethod(cls.newInstance(),"handleLoadPackage",lpparam);
+            XposedHelpers.callMethod(cls.newInstance(),handleHookMethod,lpparam,param);
             L.d("[invoke Method] <==");
         }catch (Exception e){
-            L.e(e.getMessage());
+            L.e("invokeHandleHookMethod Error: "+e.getMessage());
             e.printStackTrace();
         }
     }
