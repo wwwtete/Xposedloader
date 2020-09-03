@@ -8,9 +8,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -20,6 +24,8 @@ import java.util.List;
  * Created by wangw on 2018/9/19.
  */
 public class SelectPackNameDialog extends DialogFragment {
+
+    private SelectPackNameAdapter mAdapter;
 
     public static SelectPackNameDialog newInstance(int type) {
         Bundle args = new Bundle();
@@ -31,6 +37,7 @@ public class SelectPackNameDialog extends DialogFragment {
 
     RecyclerView mRecyclerView;
     TextView mTvTitle;
+    EditText mEvInput;
     int mType;
     List<PackageInfo> mApps;
 
@@ -40,6 +47,7 @@ public class SelectPackNameDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_select_packname, container, false);
         mTvTitle = view.findViewById(R.id.tv_title);
         mRecyclerView = view.findViewById(R.id.recyclerview);
+        mEvInput = view.findViewById(R.id.ev_input);
         return view;
     }
 
@@ -50,7 +58,34 @@ public class SelectPackNameDialog extends DialogFragment {
         mTvTitle.setText(mType == 0 ? StrConstants.SELECTHOOKTARGET : StrConstants.SELECTXPOSEDPLUGIN);
         getApps();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(new SelectPackNameAdapter());
+        mAdapter = new SelectPackNameAdapter(mApps);
+        mRecyclerView.setAdapter(mAdapter);
+        mEvInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Editable input = mEvInput.getText();
+                if (TextUtils.isEmpty(input)) {
+                    mAdapter.updateData(mApps);
+                }else {
+                    ArrayList<PackageInfo> apps = new ArrayList<>();
+                    for (PackageInfo app : mApps) {
+                        if (app.packageName.contains(input) || SysUtils.getAppName(getActivity(),app.packageName).contains(input)){
+                            apps.add(app);
+                        }
+                    }
+                    mAdapter.updateData(apps);
+                }
+            }
+        });
 
     }
 
@@ -81,6 +116,17 @@ public class SelectPackNameDialog extends DialogFragment {
 
     class SelectPackNameAdapter extends RecyclerView.Adapter{
 
+        private List<PackageInfo> mData;
+
+        public SelectPackNameAdapter(List<PackageInfo> data) {
+            this.mData = data;
+        }
+
+        public void updateData(List<PackageInfo> data){
+            this.mData = data;
+            notifyDataSetChanged();
+        }
+
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -89,15 +135,15 @@ public class SelectPackNameDialog extends DialogFragment {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            ((PackNameVH)holder).onBind(mApps.get(position));
+            ((PackNameVH)holder).onBind(mData.get(position));
         }
 
         @Override
         public int getItemCount() {
-            if (mApps == null)
+            if (mData == null)
                 return 0;
             else
-                return mApps.size();
+                return mData.size();
         }
     }
 

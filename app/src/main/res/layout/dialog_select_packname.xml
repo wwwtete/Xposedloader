@@ -19,6 +19,11 @@
         android:layout_height="0.5dp"
         android:background="#DEDEDE"/>
 
+    <EditText
+      android:id="@+id/ev_input"
+      android:layout_width="match_parent"
+      android:layout_height="40dp"
+      android:hint="包名或App名"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
